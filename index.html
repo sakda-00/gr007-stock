@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบจัดการนำเข้า-นำออกสินค้า</title>
+    <title>ระบบจัดการนำเข้า-นำจ่ายสินค้า (ปรับสีปุ่มเมนูหลักตามสถานะ)</title>
     
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
@@ -155,7 +155,7 @@
     <div id="loading" class="loading">⏳ กำลังประมวลผลข้อมูลร่วมกับ Google Sheets...</div>
 
     <nav>
-        <div class="logo">📦 Stock Drive-in GR.ST007</div>
+        <div class="logo">📦 Stock Pallet Live</div>
         <div class="nav-menu">
             <button class="nav-btn active" onclick="switchPage('items-page')">Items</button>
             <button class="nav-btn" onclick="switchPage('logs-page')">Inventory Log</button>
@@ -166,7 +166,7 @@
 
     <main>
         <section id="items-page" class="page active">
-            <h2>รายการสินค้าทั้งหมด</h2>
+            <h2>รายการสินค้าทั้งหมด (Items)</h2>
             <div class="action-container">
                 <div class="search-box">
                     <input type="text" id="search-items" class="search-input" placeholder="ค้นหาด้วย รหัสสินค้า หรือ ชื่อสินค้า..." oninput="renderItems()">
@@ -174,15 +174,15 @@
                 <div class="btn-group">
                     <button class="btn btn-danger" onclick="clearAllData()">ล้างข้อมูลระบบ</button>
                     <input type="file" id="excel-import-items" class="file-input-hidden" accept=".xlsx, .xls" onchange="importItemsFromExcel(this)">
-                    <button class="btn btn-info" onclick="document.getElementById('excel-import-items').click()">+ Excel</button>
+                    <button class="btn btn-info" onclick="document.getElementById('excel-import-items').click()">📥 นำเข้า (Excel)</button>
                     <button class="btn btn-primary" onclick="openAddProductModal()">+ เพิ่มสินค้าใหม่</button>
                 </div>
             </div>
 
             <div id="expiry-items-box" class="expiry-container-box">
                 <div class="expiry-header-wrapper">
-                    <h3>⚠️รายการสินค้าใกล้หมดอายุ⚠️</h3>
-                    <button class="btn btn-warning" onclick="switchPage('levels-page')" style="font-weight: bold; font-size: 0.85rem;">🔍 ตรวจสอบสินค้า</button>
+                    <h3>⚠️ รายการสินค้าใกล้หมดอายุ (ตรวจพบภายใน 45 วัน)</h3>
+                    <button class="btn btn-warning" onclick="switchPage('levels-page')" style="font-weight: bold; font-size: 0.85rem;">🔍 ตรวจสอบล็อตสินค้า</button>
                 </div>
                 <div class="table-responsive">
                     <table style="border: 1px solid #fecdd3;">
@@ -349,7 +349,7 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxuh2i7xH54CuqtEiSwgHygoYy6f0G4Ynd7WWgEIlvw9AkmTRcofxKiozTj4GjeCQhxog/exec"; 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxeXaeauP1HqG6B7Ea43z0tC8Zyvmb6bisdm_JI6wGBrlJN8gLD4--0A3kS_8Hx9c__7g/exec"; 
 
         let products = [];
         let logs = [];
@@ -420,14 +420,30 @@
             saveLocalData();
         }
 
-        function formatExcelDate(excelDate) {
-            if (!excelDate) return "";
-            if (excelDate instanceof Date) { const d = new Date(excelDate); d.setMinutes(d.getMinutes() + d.getTimezoneOffset()); return d.toISOString().split('T')[0]; }
-            let dStr = excelDate.toString().trim();
-            if (dStr.match(/^\d{4}-\d{2}-\d{2}$/)) return dStr; 
-            if (!isNaN(dStr) && dStr.length >= 5) { const dateObj = XLSX.SSF.parse_date_code(parseInt(dStr)); if(dateObj) return `${dateObj.y}-${String(dateObj.m).padStart(2,'0')}-${String(dateObj.d).padStart(2,'0')}`; }
-            return dStr;
+	// ก๊อปปี้ฟังก์ชันนี้ไปวางทับฟังก์ชัน formatExcelDate เดิมในโค้ดของคุณ
+function formatExcelDate(excelDate) {
+    if (!excelDate) return "";
+    
+    // ถ้าเป็นวัตถุ Date จากระบบหรือ Excel cellDates: true
+    if (excelDate instanceof Date) {
+        const y = excelDate.getFullYear();
+        const m = String(excelDate.getMonth() + 1).padStart(2, '0');
+        const d = String(excelDate.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`; // ล็อกฟอร์แมต YYYY-MM-DD ตรงๆ ไม่สนไทม์โซน
+    }
+    
+    let dStr = excelDate.toString().trim();
+    if (dStr.match(/^\d{4}-\d{2}-\d{2}$/)) return dStr; 
+    
+    // ถ้ามาจากการแปลงเลขรหัสของ Excel
+    if (!isNaN(dStr) && dStr.length >= 5) {
+        const dateObj = XLSX.SSF.parse_date_code(parseInt(dStr));
+        if(dateObj) {
+            return `${dateObj.y}-${String(dateObj.m).padStart(2,'0')}-${String(dateObj.d).padStart(2,'0')}`;
         }
+    }
+    return dStr;
+}
 
         function findExcelValue(row, possibleKeys) {
             const cleanKeys = possibleKeys.map(k => k.toLowerCase().replace(/[\s\-_]/g, ''));
