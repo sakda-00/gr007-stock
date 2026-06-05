@@ -33,7 +33,6 @@
         .logo { font-size: 1.4rem; font-weight: bold; color: var(--primary); }
         .nav-menu { display: flex; gap: 0.5rem; flex-wrap: wrap; }
         
-        /* 🔥 ปรับสไตล์ปุ่มเมนูเริ่มต้นให้เป็นสีเทาอ่อนทั้งหมด */
         .nav-btn { 
             border: none; 
             padding: 0.6rem 1rem; 
@@ -43,23 +42,22 @@
             transition: all 0.2s ease; 
             font-weight: 600; 
             min-height: 44px; 
-            background-color: #e2e8f0; /* สีเทาอ่อน */
-            color: #475569; /* สีข้อความเทาเข้มเพื่อให้อ่านง่าย */
+            background-color: #e2e8f0; 
+            color: #475569; 
         }
         
-        /* 🔥 ปรับสถานะเมื่อปุ่มถูกกดใช้งาน (Active) ให้เปลี่ยนเป็นสีน้ำเงินสด */
         .nav-btn.active { 
-            background-color: var(--primary) !important; /* สีน้ำเงินสด */
-            color: white !important; /* ตัวอักษรสีขาว */
+            background-color: var(--primary) !important; 
+            color: white !important; 
             box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2), 0 2px 4px -1px rgba(37, 99, 235, 0.1); 
         }
         
         .nav-btn:hover { 
-            background-color: #cbd5e1; /* สีเทาเข้มขึ้นเล็กน้อยตอนเอาเมาส์ชี้ปุ่มที่ยังไม่ได้กด */
+            background-color: #cbd5e1; 
             color: #1e293b;
         }
         .nav-btn.active:hover {
-            background-color: var(--primary-hover) !important; /* สีน้ำเงินเข้มขึ้นตอนเมาส์ชี้ปุ่มที่เปิดใช้งานอยู่ */
+            background-color: var(--primary-hover) !important; 
             color: white !important;
         }
         
@@ -70,10 +68,14 @@
         
         /* Action Container & Button Groups */
         .action-container { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-        .search-box { flex: 1; min-width: 280px; position: relative; width: 100%; }
+        .search-box { flex: 1; min-width: 250px; position: relative; width: 100%; }
         .search-input { width: 100%; padding: 0.625rem 1rem 0.625rem 2.5rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; font-size: 0.95rem; background-color: white; height: 44px; }
         .search-box::before { content: "🔍"; position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); font-size: 0.9rem; color: var(--gray); }
         
+        /* สไตล์ Dropdown จัดเรียงข้อมูลทั่วไป */
+        .sort-select { padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; font-size: 0.95rem; height: 44px; background-color: white; min-width: 180px; }
+        @media (max-width: 767px) { .sort-select { width: 100%; } }
+
         .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; width: 100%; }
         @media (min-width: 768px) { .btn-group { width: auto; } }
 
@@ -93,9 +95,9 @@
 
         /* Reports Filter Card */
         .report-filter-card { background: white; padding: 1.25rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap; }
-        .filter-group { display: flex; flex-direction: column; gap: 0.35rem; flex: 1; min-width: 200px; }
+        .filter-group { display: flex; flex-direction: column; gap: 0.35rem; flex: 1; min-width: 180px; }
         .filter-group label { font-size: 0.9rem; font-weight: 500; color: #475569; }
-        .filter-input { padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; font-size: 0.95rem; height: 44px; width: 100%; }
+        .filter-input { padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; font-size: 0.95rem; height: 44px; width: 100%; background-color: white; }
         .report-btn-group { display: flex; gap: 0.5rem; width: 100%; }
         @media (min-width: 768px) { .report-btn-group { width: auto; margin-left: auto; } }
 
@@ -171,6 +173,12 @@
                 <div class="search-box">
                     <input type="text" id="search-items" class="search-input" placeholder="ค้นหาด้วย รหัสสินค้า หรือ ชื่อสินค้า..." oninput="renderItems()">
                 </div>
+                <select id="items-sort-by" class="sort-select" onchange="renderItems()">
+                    <option value="id_asc">รหัสสินค้า (A - Z)</option>
+                    <option value="name_asc">ชื่อสินค้า (ก - ฮ)</option>
+                    <option value="per_pallet_desc">จำนวนต่อพาเลท (มาก -> น้อย)</option>
+                    <option value="qty_desc">จำนวนคงเหลือ (มาก -> น้อย)</option>
+                </select>
                 <div class="btn-group">
                     <button class="btn btn-danger" onclick="clearAllData()">ล้างข้อมูลระบบ</button>
                     <input type="file" id="excel-import-items" class="file-input-hidden" accept=".xlsx, .xls" onchange="importItemsFromExcel(this)">
@@ -266,6 +274,16 @@
                 <div class="filter-group">
                     <label>ถึงวันที่ (สิ้นสุด)</label>
                     <input type="date" id="report-end-date" class="filter-input" onchange="renderReportTable()">
+                </div>
+                <div class="filter-group">
+                    <label>จัดเรียงข้อมูลตาม</label>
+                    <select id="report-sort-by" class="filter-input" onchange="renderReportTable()">
+                        <option value="id_asc">รหัสสินค้า (A - Z)</option>
+                        <option value="in_desc">นำเข้าสะสม (มาก -> น้อย)</option>
+                        <option value="out_desc">นำออกสะสม (มาก -> น้อย)</option>
+                        <option value="current_desc">คงเหลือพาเลท (มาก -> น้อย)</option>
+                        <option value="pieces_desc">รวมคงเหลือชิ้น (มาก -> น้อย)</option>
+                    </select>
                 </div>
                 <div class="report-btn-group">
                     <button class="btn btn-success" onclick="exportToExcel()">📊 Report Excel</button>
@@ -420,30 +438,27 @@
             saveLocalData();
         }
 
-	// ก๊อปปี้ฟังก์ชันนี้ไปวางทับฟังก์ชัน formatExcelDate เดิมในโค้ดของคุณ
-function formatExcelDate(excelDate) {
-    if (!excelDate) return "";
-    
-    // ถ้าเป็นวัตถุ Date จากระบบหรือ Excel cellDates: true
-    if (excelDate instanceof Date) {
-        const y = excelDate.getFullYear();
-        const m = String(excelDate.getMonth() + 1).padStart(2, '0');
-        const d = String(excelDate.getDate()).padStart(2, '0');
-        return `${y}-${m}-${d}`; // ล็อกฟอร์แมต YYYY-MM-DD ตรงๆ ไม่สนไทม์โซน
-    }
-    
-    let dStr = excelDate.toString().trim();
-    if (dStr.match(/^\d{4}-\d{2}-\d{2}$/)) return dStr; 
-    
-    // ถ้ามาจากการแปลงเลขรหัสของ Excel
-    if (!isNaN(dStr) && dStr.length >= 5) {
-        const dateObj = XLSX.SSF.parse_date_code(parseInt(dStr));
-        if(dateObj) {
-            return `${dateObj.y}-${String(dateObj.m).padStart(2,'0')}-${String(dateObj.d).padStart(2,'0')}`;
+        function formatExcelDate(excelDate) {
+            if (!excelDate) return "";
+            
+            if (excelDate instanceof Date) {
+                const y = excelDate.getFullYear();
+                const m = String(excelDate.getMonth() + 1).padStart(2, '0');
+                const d = String(excelDate.getDate()).padStart(2, '0');
+                return `${y}-${m}-${d}`; 
+            }
+            
+            let dStr = excelDate.toString().trim();
+            if (dStr.match(/^\d{4}-\d{2}-\d{2}$/)) return dStr; 
+            
+            if (!isNaN(dStr) && dStr.length >= 5) {
+                const dateObj = XLSX.SSF.parse_date_code(parseInt(dStr));
+                if(dateObj) {
+                    return `${dateObj.y}-${String(dateObj.m).padStart(2,'0')}-${String(dateObj.d).padStart(2,'0')}`;
+                }
+            }
+            return dStr;
         }
-    }
-    return dStr;
-}
 
         function findExcelValue(row, possibleKeys) {
             const cleanKeys = possibleKeys.map(k => k.toLowerCase().replace(/[\s\-_]/g, ''));
@@ -565,23 +580,45 @@ function formatExcelDate(excelDate) {
 
         function renderAll() { renderItems(); renderLogs(); renderLevels(); renderReportTable(); checkExpiryAlert(); }
 
+        /* 🛠️ จุดที่แก้ไข: เพิ่มระบบจัดเรียงข้อมูล (Sort By) ในหน้า Items */
         function renderItems() {
             const tbody = document.getElementById('items-table-body'); if(!tbody) return; tbody.innerHTML = '';
             const search = document.getElementById('search-items').value.toLowerCase();
-            products.forEach(p => {
-                if (p.id.toLowerCase().includes(search) || p.name.toLowerCase().includes(search)) {
-                    const totalQty = p.lots.reduce((sum, l) => sum + l.qty, 0);
-                    tbody.innerHTML += `
-                        <tr>
-                            <td><b>${p.id}</b></td><td>${p.name}</td><td>${p.perPallet.toLocaleString()} ชิ้น</td>
-                            <td><span class="badge ${totalQty > 0 ? 'badge-in' : 'badge-out'}">${totalQty} พาเลท</span></td>
-                            <td>
-                                <button class="btn btn-success" onclick="openStockActionModal('${p.id}', 'IN')">📥 นำเข้า</button>
-                                <button class="btn btn-danger" onclick="openStockActionModal('${p.id}', 'OUT')" ${totalQty <= 0 ? 'disabled' : ''}>📤 นำออก</button>
-                                <button class="btn btn-info" onclick="openHistoryModal('${p.id}')">📈 ประวัติ</button>
-                            </td>
-                        </tr>`;
-                }
+            const sortBy = document.getElementById('items-sort-by').value;
+            
+            // 1. คัดกรองข้อมูลด้วยคำค้นหา (Search Box) ก่อน
+            let filteredProducts = products.filter(p => 
+                p.id.toLowerCase().includes(search) || p.name.toLowerCase().includes(search)
+            );
+
+            // 2. ตรวจสอบเงื่อนไขการจัดเรียงข้อมูลสินค้า (Sort Logic)
+            if (sortBy === "id_asc") {
+                filteredProducts.sort((a, b) => a.id.localeCompare(b.id, undefined, {numeric: true, sensitivity: 'base'}));
+            } else if (sortBy === "name_asc") {
+                filteredProducts.sort((a, b) => a.name.localeCompare(b.name, 'th'));
+            } else if (sortBy === "per_pallet_desc") {
+                filteredProducts.sort((a, b) => b.perPallet - a.perPallet);
+            } else if (sortBy === "qty_desc") {
+                filteredProducts.sort((a, b) => {
+                    const totalA = a.lots.reduce((sum, l) => sum + l.qty, 0);
+                    const totalB = b.lots.reduce((sum, l) => sum + l.qty, 0);
+                    return totalB - totalA;
+                });
+            }
+
+            // 3. นำข้อมูลสินค้าที่กรองและจัดเรียงแล้ว มาแสดงผลบนตาราง
+            filteredProducts.forEach(p => {
+                const totalQty = p.lots.reduce((sum, l) => sum + l.qty, 0);
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>${p.id}</b></td><td>${p.name}</td><td>${p.perPallet.toLocaleString()} ชิ้น</td>
+                        <td><span class="badge ${totalQty > 0 ? 'badge-in' : 'badge-out'}">${totalQty} พาเลท</span></td>
+                        <td>
+                            <button class="btn btn-success" onclick="openStockActionModal('${p.id}', 'IN')">📥 นำเข้า</button>
+                            <button class="btn btn-danger" onclick="openStockActionModal('${p.id}', 'OUT')" ${totalQty <= 0 ? 'disabled' : ''}>📤 นำออก</button>
+                            <button class="btn btn-info" onclick="openHistoryModal('${p.id}')">📈 ประวัติ</button>
+                        </td>
+                    </tr>`;
             });
         }
 
@@ -591,7 +628,7 @@ function formatExcelDate(excelDate) {
             const filtered = logs.filter(l => (l.pName.toLowerCase().includes(search) || l.pId.toLowerCase().includes(search)) && (currentLogFilter === 'ALL' || l.type === currentLogFilter));
             if(filtered.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="empty-history">❌ ไม่พบประวัติ</td></tr>`; return; }
             filtered.forEach(l => {
-                tbody.innerHTML += `<tr><td>${l.timestamp}</td><td><b>[${l.pId}]</b> ${l.pName}</td><td><span class="badge ${l.type === 'IN' ? 'badge-in' : 'badge-out'}">${l.type === 'IN' ? '📥 นำเข้า' : '📤 นำออก'}</span></td><td><b>${l.qty}</b> พาเลท</td><td>${l.importDate || '-'}</td><td>${l.expiryDate || '-'}</td><td style="text-align: center;"><button class="btn btn-warning" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="openEditLogModal('${l.logId}')">✏️ แก้ไข</button> <button class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="deleteLog('${l.logId}')">🗑️ ลบ</button></td></tr>`;
+                tbody.innerHTML += `<tr><td>${l.timestamp}</td><td><b>[${l.pId}]</b> ${l.pName}</td><td><span class="badge ${l.type === 'IN' ? 'badge-in' : 'badge-out'}">${l.type === 'IN' ? '📥 นำเข้า' : '📤 นำออก'}</span></td><td><b>${l.qty}</b> พาเลท</td><td>${l.importDate || '-'}</td><td>${l.expiryDate || '-'}</td><td style="text-align: center;"><button class="btn btn-warning" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="openEditLogModal('${l.sortId || l.logId}')">✏️ แก้ไข</button> <button class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="deleteLog('${l.logId}')">🗑️ ลบ</button></td></tr>`;
             });
         }
 
@@ -614,24 +651,68 @@ function formatExcelDate(excelDate) {
 
         function renderReportTable() {
             const tbody = document.getElementById('report-table-body'); if(!tbody) return; tbody.innerHTML = '';
-            const start = document.getElementById('report-start-date').value; const end = document.getElementById('report-end-date').value;
+            const start = document.getElementById('report-start-date').value; 
+            const end = document.getElementById('report-end-date').value;
+            const sortBy = document.getElementById('report-sort-by').value;
+            
+            let reportData = [];
+            
             products.forEach(p => {
                 let sumIn = 0, sumOut = 0;
-                logs.forEach(l => { const logDay = l.timestamp.split(' ')[0]; if(l.pId === p.id && logDay >= start && logDay <= end) { if(l.type === 'IN') sumIn += l.qty; else sumOut += l.qty; } });
+                
+                logs.forEach(l => { 
+                    if(l.pId === p.id && l.importDate >= start && l.importDate <= end) { 
+                        if(l.type === 'IN') sumIn += l.qty; else sumOut += l.qty; 
+                    } 
+                });
+                
                 const currentQty = p.lots.reduce((sum, l) => sum + l.qty, 0);
-                tbody.innerHTML += `<tr><td class="col-checkbox"><input type="checkbox" class="chk-box report-item-chk" data-id="${p.id}" checked></td><td>${p.id}</td><td>${p.name}</td><td>${sumIn}</td><td>${sumOut}</td><td><span class="badge badge-in">${currentQty}</span></td><td>${(currentQty * p.perPallet).toLocaleString()}</td></tr>`;
+                const totalPieces = currentQty * p.perPallet;
+                
+                reportData.push({
+                    id: p.id,
+                    name: p.name,
+                    sumIn: sumIn,
+                    sumOut: sumOut,
+                    currentQty: currentQty,
+                    totalPieces: totalPieces
+                });
+            });
+
+            if (sortBy === "id_asc") {
+                reportData.sort((a, b) => a.id.localeCompare(b.id, undefined, {numeric: true, sensitivity: 'base'}));
+            } else if (sortBy === "in_desc") {
+                reportData.sort((a, b) => b.sumIn - a.sumIn);
+            } else if (sortBy === "out_desc") {
+                reportData.sort((a, b) => b.sumOut - a.sumOut);
+            } else if (sortBy === "current_desc") {
+                reportData.sort((a, b) => b.currentQty - a.currentQty);
+            } else if (sortBy === "pieces_desc") {
+                reportData.sort((a, b) => b.totalPieces - a.totalPieces);
+            }
+
+            reportData.forEach(item => {
+                tbody.innerHTML += `<tr>
+                    <td class="col-checkbox"><input type="checkbox" class="chk-box report-item-chk" data-id="${item.id}" checked></td>
+                    <td>${item.id}</td>
+                    <td>${item.name}</td>
+                    <td>${item.sumIn}</td>
+                    <td>${item.sumOut}</td>
+                    <td><span class="badge badge-in">${item.currentQty}</span></td>
+                    <td>${item.totalPieces.toLocaleString()}</td>
+                </tr>`;
             });
         }
 
         function toggleSelectAllReports(master) { document.querySelectorAll('.report-item-chk').forEach(chk => chk.checked = master.checked); }
 
         function checkExpiryAlert() {
-            const today = new Date(); const box = document.getElementById('expiry-items-box'); const tbody = document.getElementById('expiry-items-table-body');
+            const MathDiff = Math; const today = new Date(); const box = document.getElementById('expiry-items-box'); const tbody = document.getElementById('expiry-items-table-body');
             if(!tbody || !box) return; tbody.innerHTML = ''; let count = 0;
             products.forEach(p => {
                 p.lots.forEach(lot => {
                     if (lot.qty > 0) {
-                        const diff = Math.ceil((new Date(lot.expiryDate) - today) / (1000 * 60 * 60 * 24));
+                        const diff = MathDiff.ceil((new Date(lot.expiryDate) - today) / (1000 * 60 * 60 * 24));
                         if (diff <= 45) { count++; tbody.innerHTML += `<tr><td><b>${p.id}</b></td><td>${p.name}</td><td style="color: #dc2626;">${lot.expiryDate}</td><td><b>${lot.qty}</b> พาเลท</td><td><span class="badge ${diff <= 0 ? 'badge-out':'badge-warning'}">${diff<=0?'❌ หมดอายุ':'⚠️ เหลือ '+diff+' วัน'}</span></td></tr>`; }
                     }
                 });
@@ -755,7 +836,7 @@ function formatExcelDate(excelDate) {
                                     <th>รหัสสินค้า</th><th>ชื่อรายการสินค้า</th><th style="text-align: center;">นำเข้า (พาเลท)</th><th style="text-align: center;">นำออก (พาเลท)</th><th style="text-align: center;">คงเหลือ (พาเลท)</th><th style="text-align: right;">รวมคงเหลือ (ชิ้น)</th>
                                 </tr>
                             </thead>
-                            <tbody>${tableRowsHtml}</tbody>
+                            <tbody id="table-rows">${tableRowsHtml}</tbody>
                         </table>
                     </body>
                     </html>
