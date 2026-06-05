@@ -182,13 +182,13 @@
             <div id="expiry-items-box" class="expiry-container-box">
                 <div class="expiry-header-wrapper">
                     <h3>⚠️ รายการสินค้าใกล้หมดอายุ ⚠️</h3>
-                    <button class="btn btn-warning" onclick="switchPage('levels-page')" style="font-weight: bold; font-size: 0.85rem;">🔍 ตรวจสอบล็อตสินค้า</button>
+                    <button class="btn btn-warning" onclick="switchPage('levels-page')" style="font-weight: bold; font-size: 0.85rem;">🔍 ตรวจสอบสินค้า</button>
                 </div>
                 <div class="table-responsive">
                     <table style="border: 1px solid #fecdd3;">
                         <thead style="background-color: #ffe4e6;">
                             <tr>
-                                <th>รหัสสินค้า</th><th>ชื่อสินค้า</th><th>วันหมดอายุสินค้า</th><th>จำนวนล็อตคงเหลือ</th><th>สถานะความเร่งด่วน</th>
+                                <th>รหัสสินค้า</th><th>ชื่อสินค้า</th><th>วันหมดอายุสินค้า</th><th>จำนวน</th><th>สถานะ</th>
                             </tr>
                         </thead>
                         <tbody id="expiry-items-table-body"></tbody>
@@ -200,7 +200,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>รหัสสินค้า</th><th>ชื่อสินค้า</th><th>จำนวนสินค้า/พาเลท</th><th>จำนวนคงเหลือรวม</th><th>จัดการสินค้า</th>
+                            <th>รหัสสินค้า</th><th>ชื่อสินค้า</th><th>จำนวนสินค้า/พาเลท</th><th>จำนวนคงเหลือ</th><th>จัดการสินค้า</th>
                         </tr>
                     </thead>
                     <tbody id="items-table-body"></tbody>
@@ -229,7 +229,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>วัน-เวลา</th><th>ชื่อสินค้า</th><th>ประเภท</th><th>จำนวน</th><th>วันนำเข้า</th><th>วันหมดอายุ</th><th style="text-align: center;">จัดการข้อมูล</th> 
+                            <th>วัน-เวลา</th><th>ชื่อสินค้า</th><th>ประเภท</th><th>จำนวน</th><th>วันเข้า-ออก</th><th>วันหมดอายุ</th><th style="text-align: center;">จัดการข้อมูล</th> 
                         </tr>
                     </thead>
                     <tbody id="logs-table-body"></tbody>
@@ -238,7 +238,7 @@
         </section>
 
         <section id="levels-page" class="page">
-            <h2>ระดับสต๊อกแยกตามล็อตสินค้า (Levels)</h2>
+            <h2>ระดับสินค้าแยกตามหน่วยของการนำเข้า(Levels)</h2>
             <div class="action-container">
                 <div class="search-box">
                     <input type="text" id="search-levels" class="search-input" placeholder="ค้นหาล็อตด้วย รหัสสินค้า หรือ ชื่อสินค้า..." oninput="renderLevels()">
@@ -248,7 +248,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>รหัสสินค้า</th><th>ชื่อสินค้า</th><th>วันนำเข้า</th><th>วันหมดอายุ</th><th>จำนวนคงเหลือในล็อต</th><th>สถานะล็อต</th>
+                            <th>รหัสสินค้า</th><th>ชื่อสินค้า</th><th>วันนำเข้า</th><th>วันหมดอายุ</th><th>จำนวนคงเหลือใน Lot</th><th>สถานะ Lot</th>
                         </tr>
                     </thead>
                     <tbody id="levels-table-body"></tbody>
@@ -257,7 +257,7 @@
         </section>
 
         <section id="reports-page" class="page">
-            <h2>ระบบรายงานและส่งออกไฟล์ข้อมูล (Reports)</h2>
+            <h2>รายงานและส่งออกไฟล์ข้อมูล</h2>
             <div class="report-filter-card">
                 <div class="filter-group">
                     <label>ตั้งแต่วันที่ (เริ่มต้น)</label>
@@ -268,8 +268,8 @@
                     <input type="date" id="report-end-date" class="filter-input" onchange="renderReportTable()">
                 </div>
                 <div class="report-btn-group">
-                    <button class="btn btn-success" onclick="exportToExcel()">📊 ส่งออก Excel</button>
-                    <button class="btn btn-primary" onclick="exportToWord()">📝 ส่งออก Word (ภาษาไทย 100% )</button>
+                    <button class="btn btn-success" onclick="exportToExcel()">📊 Report Excel</button>
+                    <button class="btn btn-primary" onclick="exportToWord()">📝 Report Word</button>
                 </div>
             </div>
 
@@ -295,8 +295,8 @@
             <form id="add-product-form" onsubmit="createNewProduct(event)">
                 <div class="form-group"><label>รหัสสินค้า</label><input type="text" id="new-p-id" class="form-control" required></div>
                 <div class="form-group"><label>ชื่อสินค้า</label><input type="text" id="new-p-name" class="form-control" required></div>
-                <div class="form-group"><label>จำนวนต่อพาเลท</label><input type="number" id="new-p-per-pallet" class="form-control" min="1" required></div>
-                <div class="form-group"><label>จำนวนเริ่มต้น (พาเลท)</label><input type="number" id="new-p-qty" class="form-control" min="1" required></div>
+                <div class="form-group"><label>จำนวน/พาเลท</label><input type="number" id="new-p-per-pallet" class="form-control" min="1" required></div>
+                <div class="form-group"><label>จำนวนเริ่มต้น(พาเลท)</label><input type="number" id="new-p-qty" class="form-control" min="1" required></div>
                 <div class="form-group"><label>วันนำเข้า</label><input type="date" id="new-p-import-date" class="form-control" required></div>
                 <div class="form-group"><label>วันหมดอายุ</label><input type="date" id="new-p-expiry-date" class="form-control" required></div>
                 <button type="submit" class="btn btn-primary" style="width:100%">บันทึกสินค้า</button>
@@ -322,7 +322,7 @@
     <div id="editLogModal" class="modal">
         <div class="modal-content">
             <button class="close-modal" onclick="closeModal('editLogModal')">&times;</button>
-            <h3 style="color: var(--warning)">✏️ แก้ไขประวัติสต๊อก</h3>
+            <h3 style="color: var(--warning)">✏️ แก้ไขการนำเข้า-นำออกสินค้า</h3>
             <p id="edit-log-subtitle" class="text-muted"></p>
             <form id="edit-log-form" onsubmit="handleEditLogSubmit(event)">
                 <input type="hidden" id="edit-log-id">
@@ -341,7 +341,7 @@
             <p id="history-modal-subtitle" class="text-muted"></p>
             <div class="table-responsive">
                 <table>
-                    <thead><tr><th>วัน-เวลา</th><th>ประเภท</th><th>จำนวน</th><th>ล็อตวันนำเข้า</th><th>ล็อตวันหมดอายุ</th></tr></thead>
+                    <thead><tr><th>วัน-เวลา</th><th>ประเภท</th><th>จำนวน</th><th>ล็อตวันเข้า-ออก</th><th>ล็อตวันหมดอายุ</th></tr></thead>
                     <tbody id="history-table-body"></tbody>
                 </table>
             </div>
@@ -642,7 +642,7 @@ function formatExcelDate(excelDate) {
         function openStockActionModal(pId, action) {
             const product = products.find(p => p.id === pId); if(!product) return;
             document.getElementById('modal-p-id').value = pId; document.getElementById('modal-action-type').value = action; document.getElementById('modal-qty').value = '';
-            document.getElementById('modal-title').innerText = action === 'IN' ? `📥 นำเข้าสินค้า: ${product.name}` : `📤 นำจ่ายสินค้า: ${product.name}`;
+            document.getElementById('modal-title').innerText = action === 'IN' ? `📥 นำเข้าสินค้า: ${product.name}` : `📤 นำออกสินค้า: ${product.name}`;
             const lotGroup = document.getElementById('lot-select-group');
             if(action === 'IN') {
                 lotGroup.style.display = 'none'; document.getElementById('import-date-group').style.display = 'block'; document.getElementById('expiry-date-group').style.display = 'block';
