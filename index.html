@@ -158,9 +158,9 @@
         <div class="logo">📦 Stock Drive-in GR.ST007</div>
         <div class="nav-menu">
             <button class="nav-btn active" onclick="switchPage('items-page')">Items</button>
-            <button class="nav-btn" onclick="switchPage('logs-page')">Inventory Log</button>
+            <button class="nav-btn" onclick="switchPage('logs-page')">Inventory</button>
             <button class="nav-btn" onclick="switchPage('levels-page')">Levels</button>
-            <button class="nav-btn" onclick="switchPage('reports-page')">Reports Export</button>
+            <button class="nav-btn" onclick="switchPage('reports-page')">Report</button>
         </div>
     </nav>
 
@@ -222,7 +222,7 @@
                 <div class="btn-group">
                     <button class="btn btn-danger" onclick="clearAllLogs()">⚠️ ล้างบันทึกทั้งหมด</button> 
                     <input type="file" id="excel-import-logs" class="file-input-hidden" accept=".xlsx, .xls" onchange="importLogsFromExcel(this)">
-                    <button class="btn btn-info" onclick="document.getElementById('excel-import-logs').click()">📥 นำเข้าประวัติ (Excel)</button>
+                    <button class="btn btn-info" onclick="document.getElementById('excel-import-logs').click()">📥 นำเข้าบันทึก (Excel)</button>
                 </div>
             </div>
             <div class="table-responsive">
@@ -238,7 +238,7 @@
         </section>
 
         <section id="levels-page" class="page">
-            <h2>ระดับสินค้าแยกตามหน่วยของการนำเข้า(Levels)</h2>
+            <h2>ระดับสินค้าแยกตามหน่วยของการนำเข้า</h2>
             <div class="action-container">
                 <div class="search-box">
                     <input type="text" id="search-levels" class="search-input" placeholder="ค้นหาล็อตด้วย รหัสสินค้า หรือ ชื่อสินค้า..." oninput="renderLevels()">
@@ -278,7 +278,7 @@
                     <thead>
                         <tr>
                             <th class="col-checkbox"><input type="checkbox" id="report-select-all" class="chk-box" onchange="toggleSelectAllReports(this)"></th>
-                            <th>รหัสสินค้า</th><th>ชื่อสินค้า</th><th>ยอดนำเข้าสะสม (พาเลท)</th><th>ยอดนำจ่ายสะสม (พาเลท)</th><th>ยอดคงเหลือปัจจุบัน (พาเลท)</th><th>คิดเป็นจำนวนรวม (ชิ้น)</th>
+                            <th>รหัสสินค้า</th><th>ชื่อสินค้า</th><th>นำเข้าสะสม</th><th>นำออกสะสม</th><th>คงเหลือ</th><th>คิดเป็นจำนวนชิ้น</th>
                         </tr>
                     </thead>
                     <tbody id="report-table-body"></tbody>
