@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบจัดการนำเข้า-นำจ่ายสินค้า (ปรับสีปุ่มเมนูหลักตามสถานะ)</title>
+    <title>ระบบจัดการนำเข้า-นำออกสินค้า</title>
     
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
@@ -155,7 +155,7 @@
     <div id="loading" class="loading">⏳ กำลังประมวลผลข้อมูลร่วมกับ Google Sheets...</div>
 
     <nav>
-        <div class="logo">📦 Stock Pallet Live</div>
+        <div class="logo">📦 Stock Drive-in GR.ST007</div>
         <div class="nav-menu">
             <button class="nav-btn active" onclick="switchPage('items-page')">Items</button>
             <button class="nav-btn" onclick="switchPage('logs-page')">Inventory Log</button>
@@ -166,7 +166,7 @@
 
     <main>
         <section id="items-page" class="page active">
-            <h2>รายการสินค้าทั้งหมด (Items)</h2>
+            <h2>รายการสินค้าทั้งหมด</h2>
             <div class="action-container">
                 <div class="search-box">
                     <input type="text" id="search-items" class="search-input" placeholder="ค้นหาด้วย รหัสสินค้า หรือ ชื่อสินค้า..." oninput="renderItems()">
@@ -174,15 +174,15 @@
                 <div class="btn-group">
                     <button class="btn btn-danger" onclick="clearAllData()">ล้างข้อมูลระบบ</button>
                     <input type="file" id="excel-import-items" class="file-input-hidden" accept=".xlsx, .xls" onchange="importItemsFromExcel(this)">
-                    <button class="btn btn-info" onclick="document.getElementById('excel-import-items').click()">📥 นำเข้า (Excel)</button>
+                    <button class="btn btn-info" onclick="document.getElementById('excel-import-items').click()">+ Excel</button>
                     <button class="btn btn-primary" onclick="openAddProductModal()">+ เพิ่มสินค้าใหม่</button>
                 </div>
             </div>
 
             <div id="expiry-items-box" class="expiry-container-box">
                 <div class="expiry-header-wrapper">
-                    <h3>⚠️ รายการสินค้าใกล้หมดอายุ (ตรวจพบภายใน 45 วัน)</h3>
-                    <button class="btn btn-warning" onclick="switchPage('levels-page')" style="font-weight: bold; font-size: 0.85rem;">🔍 ตรวจสอบล็อตสินค้า</button>
+                    <h3>⚠️รายการสินค้าใกล้หมดอายุ⚠️</h3>
+                    <button class="btn btn-warning" onclick="switchPage('levels-page')" style="font-weight: bold; font-size: 0.85rem;">🔍 ตรวจสอบสินค้า</button>
                 </div>
                 <div class="table-responsive">
                     <table style="border: 1px solid #fecdd3;">
