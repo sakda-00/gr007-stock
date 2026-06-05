@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบจัดการนำเข้า-นำจ่ายสินค้า (Responsive & Google Sheets)</title>
+    <title>ระบบจัดการนำเข้า-นำจ่ายสินค้า (ปรับสีปุ่มเมนูหลักตามสถานะ)</title>
     
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
@@ -12,12 +12,15 @@
             --primary: #2563eb;
             --primary-hover: #1d4ed8;
             --success: #16a34a;
+            --success-hover: #15803d;
             --danger: #dc2626;
             --dark: #1f2937;
             --light: #f3f4f6;
             --gray: #9ca3af;
             --info: #0284c7;
+            --info-hover: #0369a1;
             --warning: #ea580c;
+            --warning-hover: #c2410c;
             --alert-bg: #fff7ed;
             --alert-border: #f97316;
         }
@@ -25,19 +28,47 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f0f2f5; color: var(--dark); display: flex; flex-direction: column; min-height: 100vh; }
         
-        /* Navigation Responsive */
+        /* Navigation & Toggle Menu Buttons Style */
         nav { background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 1rem; }
         .logo { font-size: 1.4rem; font-weight: bold; color: var(--primary); }
         .nav-menu { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-        .nav-btn { background: none; border: none; padding: 0.6rem 1rem; font-size: 0.95rem; cursor: pointer; border-radius: 0.375rem; transition: all 0.3s; color: var(--dark); font-weight: 500; min-height: 44px; }
-        .nav-btn.active { background-color: var(--primary); color: white; }
+        
+        /* 🔥 ปรับสไตล์ปุ่มเมนูเริ่มต้นให้เป็นสีเทาอ่อนทั้งหมด */
+        .nav-btn { 
+            border: none; 
+            padding: 0.6rem 1rem; 
+            font-size: 0.95rem; 
+            cursor: pointer; 
+            border-radius: 0.375rem; 
+            transition: all 0.2s ease; 
+            font-weight: 600; 
+            min-height: 44px; 
+            background-color: #e2e8f0; /* สีเทาอ่อน */
+            color: #475569; /* สีข้อความเทาเข้มเพื่อให้อ่านง่าย */
+        }
+        
+        /* 🔥 ปรับสถานะเมื่อปุ่มถูกกดใช้งาน (Active) ให้เปลี่ยนเป็นสีน้ำเงินสด */
+        .nav-btn.active { 
+            background-color: var(--primary) !important; /* สีน้ำเงินสด */
+            color: white !important; /* ตัวอักษรสีขาว */
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2), 0 2px 4px -1px rgba(37, 99, 235, 0.1); 
+        }
+        
+        .nav-btn:hover { 
+            background-color: #cbd5e1; /* สีเทาเข้มขึ้นเล็กน้อยตอนเอาเมาส์ชี้ปุ่มที่ยังไม่ได้กด */
+            color: #1e293b;
+        }
+        .nav-btn.active:hover {
+            background-color: var(--primary-hover) !important; /* สีน้ำเงินเข้มขึ้นตอนเมาส์ชี้ปุ่มที่เปิดใช้งานอยู่ */
+            color: white !important;
+        }
         
         main { flex: 1; padding: 1.5rem; max-width: 1200px; width: 100%; margin: 0 auto; }
         .page { display: none; }
         .page.active { display: block; }
         h2 { margin-bottom: 1.5rem; color: var(--dark); border-left: 5px solid var(--primary); padding-left: 0.5rem; font-size: 1.5rem; }
         
-        /* Action Container & Button Groups Responsive */
+        /* Action Container & Button Groups */
         .action-container { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
         .search-box { flex: 1; min-width: 280px; position: relative; width: 100%; }
         .search-input { width: 100%; padding: 0.625rem 1rem 0.625rem 2.5rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; font-size: 0.95rem; background-color: white; height: 44px; }
@@ -55,12 +86,12 @@
         .toggle-btn.active.type-in { color: var(--success); font-weight: bold; }
         .toggle-btn.active.type-out { color: var(--danger); font-weight: bold; }
 
-        /* Expiry Box Responsive */
+        /* Expiry Box */
         .expiry-container-box { display: none; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 0.5rem; padding: 1.25rem; margin-bottom: 2rem; box-shadow: 0 2px 4px rgba(220,38,38,0.05); }
         .expiry-header-wrapper { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; gap: 1rem; flex-wrap: wrap; }
         .expiry-container-box h3 { color: #be123c; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0; }
 
-        /* Reports Filter Card Responsive */
+        /* Reports Filter Card */
         .report-filter-card { background: white; padding: 1.25rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap; }
         .filter-group { display: flex; flex-direction: column; gap: 0.35rem; flex: 1; min-width: 200px; }
         .filter-group label { font-size: 0.9rem; font-weight: 500; color: #475569; }
@@ -68,7 +99,7 @@
         .report-btn-group { display: flex; gap: 0.5rem; width: 100%; }
         @media (min-width: 768px) { .report-btn-group { width: auto; margin-left: auto; } }
 
-        /* Table Responsive (ปัดซ้ายขวาบนมือถือได้ ไม่ดันหน้าจอเบี้ยว) */
+        /* Table Responsive */
         .table-responsive { width: 100%; overflow-x: auto; background: white; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); -webkit-overflow-scrolling: touch; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
         th, td { padding: 0.85rem 1rem; border-bottom: 1px solid #e5e7eb; white-space: nowrap; font-size: 0.95rem; }
@@ -106,7 +137,6 @@
         .text-muted { color: #64748b; font-size: 0.85rem; font-weight: normal; }
         .empty-history { text-align: center; padding: 2rem; color: var(--gray); font-style: italic; }
 
-        /* Media Queries เจาะลึกหน้าจอมือถือขนาดเล็ก (< 768px) */
         @media (max-width: 767px) {
             nav { flex-direction: column; align-items: stretch; padding: 1rem; }
             .logo { text-align: center; }
@@ -239,7 +269,7 @@
                 </div>
                 <div class="report-btn-group">
                     <button class="btn btn-success" onclick="exportToExcel()">📊 ส่งออก Excel</button>
-                    <button class="btn btn-primary" onclick="exportToWord()">📝 ส่งออก Word (ภาษาไทย 100%)</button>
+                    <button class="btn btn-primary" onclick="exportToWord()">📝 ส่งออก Word (ภาษาไทย 100% )</button>
                 </div>
             </div>
 
@@ -319,7 +349,6 @@
     </div>
 
     <script>
-        // 🚨 นำ URL ของ Web App จาก Google Sheets มาใส่ในตัวแปรนี้ครับ
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxuh2i7xH54CuqtEiSwgHygoYy6f0G4Ynd7WWgEIlvw9AkmTRcofxKiozTj4GjeCQhxog/exec"; 
 
         let products = [];
