@@ -313,7 +313,7 @@
             <form id="add-product-form" onsubmit="createNewProduct(event)">
                 <div class="form-group"><label>รหัสสินค้า</label><input type="text" id="new-p-id" class="form-control" required></div>
                 <div class="form-group"><label>ชื่อสินค้า</label><input type="text" id="new-p-name" class="form-control" required></div>
-                <div class="form-group"><label>จำนวน/พาเลท</label><input type="number" id="new-p-per-pallet" class="form-control" min="1" required></div>
+                <div class="form-group"><label>(MU)/พาเลท</label><input type="number" id="new-p-per-pallet" class="form-control" min="1" required></div>
                 <div class="form-group"><label>จำนวนเริ่มต้น(พาเลท)</label><input type="number" id="new-p-qty" class="form-control" min="1" required></div>
                 <div class="form-group"><label>วันนำเข้า</label><input type="date" id="new-p-import-date" class="form-control" required></div>
                 <div class="form-group"><label>วันหมดอายุ</label><input type="date" id="new-p-expiry-date" class="form-control" required></div>
@@ -611,7 +611,7 @@
                 const totalQty = p.lots.reduce((sum, l) => sum + l.qty, 0);
                 tbody.innerHTML += `
                     <tr>
-                        <td><b>${p.id}</b></td><td>${p.name}</td><td>${p.perPallet.toLocaleString()} ชิ้น</td>
+                        <td><b>${p.id}</b></td><td>${p.name}</td><td>${p.perPallet.toLocaleString()} MU</td>
                         <td><span class="badge ${totalQty > 0 ? 'badge-in' : 'badge-out'}">${totalQty} พาเลท</span></td>
                         <td>
                             <button class="btn btn-success" onclick="openStockActionModal('${p.id}', 'IN')">📥 นำเข้า</button>
@@ -779,7 +779,7 @@
 
         function exportToExcel() {
             const chks = document.querySelectorAll('.report-item-chk:checked'); if(chks.length===0) return;
-            const rows = [["รหัสสินค้า", "ชื่อสินค้า", "นำเข้า (พาเลท)", "นำจ่าย (พาเลท)", "คงเหลือ (พาเลท)", "รวม (ชิ้น)"]];
+            const rows = [["รหัสสินค้า", "ชื่อสินค้า", "นำเข้า (พาเลท)", "นำจ่าย (พาเลท)", "คงเหลือ (พาเลท)", "รวม (MU)"]];
             chks.forEach(chk => { const tds = chk.closest('tr').querySelectorAll('td'); rows.push([tds[1].innerText, tds[2].innerText, parseInt(tds[3].innerText), parseInt(tds[4].innerText), parseInt(tds[5].innerText), tds[6].innerText.replace(/,/g,'')]); });
             const ws = XLSX.utils.aoa_to_sheet(rows), wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Report");
             XLSX.writeFile(wb, `Stock_Report_${new Date().toISOString().split('T')[0]}.xlsx`);
