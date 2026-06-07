@@ -355,7 +355,7 @@
     <div id="historyModal" class="modal">
         <div class="modal-content modal-large">
             <button class="close-modal" onclick="closeModal('historyModal')">&times;</button>
-            <h3 id="history-modal-title">📈 ความเคลื่อนไหวสินค้า</h3>
+            <h3 id="history-modal-title">📈 ความเคลื่อนไความสินค้า</h3>
             <p id="history-modal-subtitle" class="text-muted"></p>
             <div class="table-responsive">
                 <table>
@@ -580,7 +580,7 @@
 
         function renderAll() { renderItems(); renderLogs(); renderLevels(); renderReportTable(); checkExpiryAlert(); }
 
-        /* 🛠️ จุดที่แก้ไข: เพิ่มระบบจัดเรียงข้อมูล (Sort By) ในหน้า Items */
+        /* 🛠️ จุดที่แก้ไข: เพิ่มการแสดงผลจำนวน MU ขนาดเล็กไว้ใต้จำนวนพาเลทคงเหลือ */
         function renderItems() {
             const tbody = document.getElementById('items-table-body'); if(!tbody) return; tbody.innerHTML = '';
             const search = document.getElementById('search-items').value.toLowerCase();
@@ -609,10 +609,17 @@
             // 3. นำข้อมูลสินค้าที่กรองและจัดเรียงแล้ว มาแสดงผลบนตาราง
             filteredProducts.forEach(p => {
                 const totalQty = p.lots.reduce((sum, l) => sum + l.qty, 0);
+                const totalMU = totalQty * p.perPallet; // คำนวณจำนวน MU ทั้งหมดที่มีในคลัง
+                
                 tbody.innerHTML += `
                     <tr>
                         <td><b>${p.id}</b></td><td>${p.name}</td><td>${p.perPallet.toLocaleString()} MU</td>
-                        <td><span class="badge ${totalQty > 0 ? 'badge-in' : 'badge-out'}">${totalQty} พาเลท</span></td>
+                        <td>
+                            <span class="badge ${totalQty > 0 ? 'badge-in' : 'badge-out'}">${totalQty} พาเลท</span>
+                            <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px; padding-left: 4px;">
+                                (${totalMU.toLocaleString()} MU)
+                            </div>
+                        </td>
                         <td>
                             <button class="btn btn-success" onclick="openStockActionModal('${p.id}', 'IN')">📥 นำเข้า</button>
                             <button class="btn btn-danger" onclick="openStockActionModal('${p.id}', 'OUT')" ${totalQty <= 0 ? 'disabled' : ''}>📤 นำออก</button>
